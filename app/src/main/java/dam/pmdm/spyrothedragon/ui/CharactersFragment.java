@@ -1,9 +1,11 @@
 package dam.pmdm.spyrothedragon.ui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -35,6 +37,8 @@ public class CharactersFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentCharactersBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+
         // Inicializamos el RecyclerView y el adaptador
         recyclerView = binding.recyclerViewCharacters;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -44,8 +48,13 @@ public class CharactersFragment extends Fragment {
 
         // Cargamos los personajes desde el XML
         loadCharacters();
-        return binding.getRoot();
+
+        // Configurar la visibilidad del bocadillo
+        setupBocadillo(root);
+
+        return root;
     }
+
 
     @Override
     public void onDestroyView() {
@@ -104,5 +113,31 @@ public class CharactersFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+    private void setupBocadillo(View root) {
+        View bocadillo = root.findViewById(R.id.bocadilloPersonajes);
+        View fondoOscuro = root.findViewById(R.id.fondoOscuro);
+        ImageButton btnCerrar = root.findViewById(R.id.btnCerrarBocadillo);
+
+        SharedPreferences prefs = requireActivity().getSharedPreferences("SpyroAppPrefs", 0);
+        boolean bocadilloMostrado = prefs.getBoolean("bocadillo_personajes", false);
+
+        if (!bocadilloMostrado) {
+            bocadillo.setVisibility(View.VISIBLE);
+            fondoOscuro.setVisibility(View.VISIBLE); // Activar el fondo oscuro
+
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("bocadillo_personajes", true);
+            editor.apply();
+        }
+
+        btnCerrar.setOnClickListener(v -> {
+            bocadillo.setVisibility(View.GONE);
+            fondoOscuro.setVisibility(View.GONE); // Ocultar el fondo oscuro al cerrar el bocadillo
+        });
+    }
+
+
+
 
 }

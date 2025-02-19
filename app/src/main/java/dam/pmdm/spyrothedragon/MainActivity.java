@@ -1,5 +1,7 @@
 package dam.pmdm.spyrothedragon;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +24,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Verificar si la guía ya se ha mostrado antes
+        SharedPreferences prefs = getSharedPreferences("SpyroAppPrefs", MODE_PRIVATE);
+        boolean guiaMostrada = prefs.getBoolean("guia_mostrada", false);
+
+        if (!guiaMostrada) {
+            // Si es la primera vez, lanzar la WelcomeActivity
+            Intent intent = new Intent(this, WelcomeActivity.class);
+            startActivity(intent);
+        }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
