@@ -1,7 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
     android:padding="10dp">
 
     <!-- Bocadillo con fondo y texto -->
@@ -10,9 +9,9 @@
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bocadillo_background"
-        android:padding="16dp"
+        android:padding="32dp"
         android:orientation="vertical"
-        android:elevation="8dp"
+        android:elevation="16dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true">
 
@@ -24,17 +23,60 @@
             android:textSize="16sp"
             android:textColor="@android:color/white"
             android:gravity="center"
-            android:fontFamily="sans-serif-medium"/>
-    </LinearLayout>
+            android:fontFamily="sans-serif-medium"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="16dp"/>
 
-    <!-- Botón para cerrar o avanzar -->
-    <ImageButton
-        android:id="@+id/btnCerrarBocadillo"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/bocadilloPersonajes"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_closed"
-        android:background="@null"
-        android:contentDescription="Cerrar bocadillo"/>
+        <!-- Contenedor de las flechas -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="10dp">
+
+            <!-- Botón de flecha izquierda -->
+            <ImageButton
+                android:id="@+id/btnAtras"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_flecha_izquierda"
+                android:background="@null"
+                android:contentDescription="Ir atrás"
+                android:visibility="visible"/> <!-- Oculto en la primera pantalla -->
+
+            <!-- Espaciado entre botones -->
+            <Space
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"/>
+
+            <!-- Botón de cerrar -->
+            <ImageButton
+                android:id="@+id/btnCerrarManual"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/bocadilloPersonajes"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_closed"
+                android:background="@null"
+                android:contentDescription="Cerrar bocadillo"/>
+
+            <Space
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"/>
+
+            <!-- Botón de flecha derecha -->
+            <ImageButton
+                android:id="@+id/btnAdelante"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_flecha_derecha"
+                android:background="@null"
+                android:contentDescription="Avanzar"/>
+
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>
+
+

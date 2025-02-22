@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -114,30 +115,32 @@ public class CharactersFragment extends Fragment {
         }
     }
 
+
+
     private void setupBocadillo(View root) {
         View bocadillo = root.findViewById(R.id.bocadilloPersonajes);
         View fondoOscuro = root.findViewById(R.id.fondoOscuro);
-        ImageButton btnCerrar = root.findViewById(R.id.btnCerrarBocadillo);
+        ImageButton btnCerrarManual = root.findViewById(R.id.btnCerrarManual);
 
-        SharedPreferences prefs = requireActivity().getSharedPreferences("SpyroAppPrefs", 0);
-        boolean bocadilloMostrado = prefs.getBoolean("bocadillo_personajes", false);
+        bocadillo.setVisibility(View.VISIBLE);
+        fondoOscuro.setVisibility(View.VISIBLE); // Activar el fondo oscuro
 
-        if (!bocadilloMostrado) {
-            bocadillo.setVisibility(View.VISIBLE);
-            fondoOscuro.setVisibility(View.VISIBLE); // Activar el fondo oscuro
-
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("bocadillo_personajes", true);
-            editor.apply();
-        }
-
-        btnCerrar.setOnClickListener(v -> {
-            bocadillo.setVisibility(View.GONE);
-            fondoOscuro.setVisibility(View.GONE); // Ocultar el fondo oscuro al cerrar el bocadillo
-        });
+        // Configuración del botón de cierre
+        btnCerrarManual.setOnClickListener(v -> mostrarDialogoCerrarManual(bocadillo, fondoOscuro));
     }
 
-
+    // Método para mostrar el AlertDialog de confirmación
+    private void mostrarDialogoCerrarManual(View bocadillo, View fondoOscuro) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Cerrar Manual")
+                .setMessage("¿Seguro que quieres cerrar la guía?")
+                .setPositiveButton("Sí", (dialog, which) -> {
+                    bocadillo.setVisibility(View.GONE);
+                    fondoOscuro.setVisibility(View.GONE);
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
 
 
 }

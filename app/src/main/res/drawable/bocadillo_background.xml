@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-    <solid android:color="#80000000"/> <!-- Color negro semi-transparente -->
+    android:shape="rectangle">
+
+    <!-- Fondo negro semi-transparente -->
+    <solid android:color="#707B1FA2"/>
+
+    <!-- Define un solo borde redondeado para hacer el cuarto de círculo -->
+    <corners
+        android:topLeftRadius="180dp"
+        android:topRightRadius="180dp"
+        android:bottomLeftRadius="0dp"
+        android:bottomRightRadius="0dp"/>
 </shape>
+
