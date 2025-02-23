@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import dam.pmdm.spyrothedragon.MainActivity;
 import dam.pmdm.spyrothedragon.R;
 import dam.pmdm.spyrothedragon.models.Character;
 import dam.pmdm.spyrothedragon.adapters.CharactersAdapter;
@@ -115,19 +117,21 @@ public class CharactersFragment extends Fragment {
         }
     }
 
-
-
     private void setupBocadillo(View root) {
         View bocadillo = root.findViewById(R.id.bocadilloPersonajes);
         View fondoOscuro = root.findViewById(R.id.fondoOscuro);
         ImageButton btnCerrarManual = root.findViewById(R.id.btnCerrarManual);
 
+        // Bloquear navegación mientras la guía está activa
+        ((MainActivity) requireActivity()).setGuiaActiva(true);
+
         bocadillo.setVisibility(View.VISIBLE);
-        fondoOscuro.setVisibility(View.VISIBLE); // Activar el fondo oscuro
+        fondoOscuro.setVisibility(View.VISIBLE);
 
         // Configuración del botón de cierre
         btnCerrarManual.setOnClickListener(v -> mostrarDialogoCerrarManual(bocadillo, fondoOscuro));
     }
+
 
     // Método para mostrar el AlertDialog de confirmación
     private void mostrarDialogoCerrarManual(View bocadillo, View fondoOscuro) {
@@ -137,10 +141,10 @@ public class CharactersFragment extends Fragment {
                 .setPositiveButton("Sí", (dialog, which) -> {
                     bocadillo.setVisibility(View.GONE);
                     fondoOscuro.setVisibility(View.GONE);
+                    ((MainActivity) requireActivity()).setGuiaActiva(false); // Reactivar navegación
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
-
 
 }

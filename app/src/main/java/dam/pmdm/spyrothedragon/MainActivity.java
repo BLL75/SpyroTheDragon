@@ -19,6 +19,8 @@ import dam.pmdm.spyrothedragon.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private boolean guiaActiva = false;
+
     NavController navController = null;
 
     @Override
@@ -26,14 +28,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Verificar si la guía ya se ha mostrado antes
-        /*SharedPreferences prefs = getSharedPreferences("SpyroAppPrefs", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("SpyroAppPrefs", MODE_PRIVATE);
         boolean guiaMostrada = prefs.getBoolean("guia_mostrada", false);
 
         if (!guiaMostrada) {
             // Si es la primera vez, lanzar la WelcomeActivity
             Intent intent = new Intent(this, WelcomeActivity.class);
             startActivity(intent);
-        }*/
+        }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -63,16 +65,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean selectedBottomMenu(@NonNull MenuItem menuItem) {
+        // Si la guía está activa, no permitir navegación
+        if (guiaActiva) {
+            return false; // Bloquea cambios de pestaña
+        }
+
         if (menuItem.getItemId() == R.id.nav_characters)
             navController.navigate(R.id.navigation_characters);
-        else
-        if (menuItem.getItemId() == R.id.nav_worlds)
+        else if (menuItem.getItemId() == R.id.nav_worlds)
             navController.navigate(R.id.navigation_worlds);
         else
             navController.navigate(R.id.navigation_collectibles);
-        return true;
 
+        return true;
     }
+
+    public void setGuiaActiva(boolean estado) {
+        this.guiaActiva = estado;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
