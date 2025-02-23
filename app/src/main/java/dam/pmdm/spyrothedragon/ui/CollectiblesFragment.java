@@ -4,8 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +21,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import dam.pmdm.spyrothedragon.MainActivity;
 import dam.pmdm.spyrothedragon.R;
 import dam.pmdm.spyrothedragon.adapters.CollectiblesAdapter;
 import dam.pmdm.spyrothedragon.databinding.FragmentCollectiblesBinding;
@@ -33,6 +38,7 @@ public class CollectiblesFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentCollectiblesBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
         recyclerView = binding.recyclerViewCollectibles;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         collectiblesList = new ArrayList<>();
@@ -40,6 +46,7 @@ public class CollectiblesFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         loadCollectibles();
+        setupBocadillo(root);
         return binding.getRoot();
     }
 
@@ -98,5 +105,61 @@ public class CollectiblesFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void setupBocadillo(View root) {
+        View bocadillo = root.findViewById(R.id.bocadilloPersonajes);
+        TextView textoBocadillo = bocadillo.findViewById(R.id.textoBocadillo);
+        View fondoOscuro = root.findViewById(R.id.fondoOscuro);
+        ImageButton btnCerrarManual = bocadillo.findViewById(R.id.btnCerrarManual);
+        ImageButton btnAdelante = bocadillo.findViewById(R.id.btnAdelante);
+        ImageButton btnAtras = bocadillo.findViewById(R.id.btnAtras);
+
+        // Personalizar texto para Mundos
+        textoBocadillo.setText(getString(R.string.texto_bocadillo_coleccionables));
+
+        // Asegurar que el bocadillo y sus elementos sean visibles
+        bocadillo.setVisibility(View.VISIBLE);
+        fondoOscuro.setVisibility(View.VISIBLE);
+        textoBocadillo.setVisibility(View.VISIBLE);
+        btnCerrarManual.setVisibility(View.VISIBLE);
+        btnAtras.setVisibility(View.VISIBLE);
+        btnAdelante.setVisibility(View.VISIBLE);
+
+        // Ajustar la posición en Coleccionables para alinearlo con la pestaña derecha
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) bocadillo.getLayoutParams();
+        params.bottomMargin = 450; // Ajustamos la altura para alinearlo con la pestaña de Coleccionables
+        params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID; // Alinear a la derecha
+        params.startToStart = ConstraintLayout.LayoutParams.UNSET; // Desvincular la alineación izquierda
+        bocadillo.setLayoutParams(params);
+        bocadillo.requestLayout(); // Forzar actualización del layout
+
+        // Configuración del botón de cierre
+        btnCerrarManual.setOnClickListener(v -> mostrarDialogoCerrarManual(bocadillo, fondoOscuro));
+
+        // Configuración del botón Adelante para cambiar a Coleccionables
+        btnAdelante.setOnClickListener(v -> {
+            ((MainActivity) requireActivity()).getNavController().navigate(R.id.navigation_collectibles);
+        });
+
+        // Configuración del botón Atrás para regresar a Personajes
+        btnAtras.setOnClickListener(v -> {
+            ((MainActivity) requireActivity()).getNavController().navigate(R.id.navigation_worlds);
+        });
+    }
+
+
+    // Método para mostrar el AlertDialog de confirmación
+    private void mostrarDialogoCerrarManual(View bocadillo, View fondoOscuro) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Cerrar Manual")
+                .setMessage("¿Seguro que quieres cerrar la guía?")
+                .setPositiveButton("Sí", (dialog, which) -> {
+                    bocadillo.setVisibility(View.GONE);
+                    fondoOscuro.setVisibility(View.GONE);
+                    ((MainActivity) requireActivity()).setGuiaActiva(false); // Reactivar navegación
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 }
