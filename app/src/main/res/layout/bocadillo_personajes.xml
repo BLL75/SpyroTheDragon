@@ -19,7 +19,7 @@
             android:id="@+id/textoBocadillo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Aquí podrás explorar a todos los personajes del mundo de Spyro."
+            android:text="@string/texto_bocadillo"
             android:textSize="16sp"
             android:textColor="@android:color/white"
             android:gravity="center"

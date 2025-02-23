@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -119,17 +120,25 @@ public class CharactersFragment extends Fragment {
 
     private void setupBocadillo(View root) {
         View bocadillo = root.findViewById(R.id.bocadilloPersonajes);
+        TextView textoBocadillo = bocadillo.findViewById(R.id.textoBocadillo);
         View fondoOscuro = root.findViewById(R.id.fondoOscuro);
-        ImageButton btnCerrarManual = root.findViewById(R.id.btnCerrarManual);
+        ImageButton btnCerrarManual = bocadillo.findViewById(R.id.btnCerrarManual);
+        ImageButton btnAdelante = bocadillo.findViewById(R.id.btnAdelante);
 
-        // Bloquear navegación mientras la guía está activa
-        ((MainActivity) requireActivity()).setGuiaActiva(true);
+        // Personalizar texto para Personajes
+        textoBocadillo.setText(getString(R.string.texto_bocadillo_personajes));
 
+        // Asegurar que el bocadillo sea visible
         bocadillo.setVisibility(View.VISIBLE);
         fondoOscuro.setVisibility(View.VISIBLE);
 
         // Configuración del botón de cierre
         btnCerrarManual.setOnClickListener(v -> mostrarDialogoCerrarManual(bocadillo, fondoOscuro));
+
+        // Configuración del botón Adelante para cambiar a Mundos
+        btnAdelante.setOnClickListener(v -> {
+            ((MainActivity) requireActivity()).getNavController().navigate(R.id.navigation_worlds);
+        });
     }
 
 

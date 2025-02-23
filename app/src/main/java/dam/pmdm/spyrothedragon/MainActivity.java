@@ -84,6 +84,11 @@ public class MainActivity extends AppCompatActivity {
         this.guiaActiva = estado;
     }
 
+    public boolean isGuiaActiva() {
+        return guiaActiva;
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -101,6 +106,11 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public NavController getNavController() {
+        return navController;
+    }
+
 
     private void showInfoDialog() {
         // Crear un diálogo de información
