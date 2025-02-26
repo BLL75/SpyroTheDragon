@@ -112,6 +112,12 @@ public class WorldsFragment extends Fragment {
     }
 
     private void setupBocadillo(View root) {
+
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null && mainActivity.isGuiaCerrada()){
+            return; // Si la guía está cerrada, no mostrar el bocadillo
+        }
+
         View bocadillo = root.findViewById(R.id.bocadilloPersonajes);
         TextView textoBocadillo = bocadillo.findViewById(R.id.textoBocadillo);
         View fondoOscuro = root.findViewById(R.id.fondoOscuro);
@@ -161,7 +167,11 @@ public class WorldsFragment extends Fragment {
                 .setPositiveButton("Sí", (dialog, which) -> {
                     bocadillo.setVisibility(View.GONE);
                     fondoOscuro.setVisibility(View.GONE);
-                    ((MainActivity) requireActivity()).setGuiaActiva(false); // Reactivar navegación
+
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    if (mainActivity != null) {
+                        mainActivity.setGuiaCerrada(true); // Guardamos el estado en SharedPreferences
+                    }
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();

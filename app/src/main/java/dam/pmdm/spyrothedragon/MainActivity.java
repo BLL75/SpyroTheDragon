@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private boolean guiaActiva = false;
+    private boolean guiaCerrada = false;
 
     NavController navController = null;
 
@@ -27,14 +28,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Verificar si la guía ya se ha mostrado antes
+        // Recuperar el estado de guiaCerrada desde SharedPreferences
         SharedPreferences prefs = getSharedPreferences("SpyroAppPrefs", MODE_PRIVATE);
-        boolean guiaMostrada = prefs.getBoolean("guia_mostrada", false);
+        guiaCerrada = prefs.getBoolean("guia_cerrada", false);
+        boolean welcomeVisto = prefs.getBoolean("welcome_visto", false);
 
-        if (!guiaMostrada) {
-            // Si es la primera vez, lanzar la WelcomeActivity
+        // Si la pantalla de inicio no ha sido vista, abrir WelcomeActivity
+        if (!welcomeVisto) {
             Intent intent = new Intent(this, WelcomeActivity.class);
             startActivity(intent);
+            finish(); // Cierra MainActivity hasta que el usuario vuelva de WelcomeActivity
+            return;
         }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -87,6 +91,21 @@ public class MainActivity extends AppCompatActivity {
     public boolean isGuiaActiva() {
         return guiaActiva;
     }
+
+    public void setGuiaCerrada(boolean estado) {
+        this.guiaCerrada = estado;
+
+        // Guardar el estado en SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("SpyroAppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("guia_cerrada", estado);
+        editor.apply();
+    }
+
+    public boolean isGuiaCerrada() {
+        return guiaCerrada;
+    }
+
 
 
 

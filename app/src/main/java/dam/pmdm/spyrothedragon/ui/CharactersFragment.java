@@ -2,6 +2,7 @@ package dam.pmdm.spyrothedragon.ui;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,30 +120,40 @@ public class CharactersFragment extends Fragment {
     }
 
     private void setupBocadillo(View root) {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null && mainActivity.isGuiaCerrada()) {
+            Log.d("cerrarGuia", "Guia cerrada, no se muestra el bocadillo");
+            return; // Si la guía está cerrada, no mostrar el bocadillo
+        }
+
         View bocadillo = root.findViewById(R.id.bocadilloPersonajes);
         TextView textoBocadillo = bocadillo.findViewById(R.id.textoBocadillo);
         View fondoOscuro = root.findViewById(R.id.fondoOscuro);
         ImageButton btnCerrarManual = bocadillo.findViewById(R.id.btnCerrarManual);
         ImageButton btnAdelante = bocadillo.findViewById(R.id.btnAdelante);
+        ImageButton btnAtras = bocadillo.findViewById(R.id.btnAtras);
 
-        // Personalizar texto para Personajes
-        textoBocadillo.setText(getString(R.string.texto_bocadillo_personajes));
+        textoBocadillo.setText(getString(R.string.texto_bocadillo_mundos));
 
-        // Asegurar que el bocadillo sea visible
         bocadillo.setVisibility(View.VISIBLE);
         fondoOscuro.setVisibility(View.VISIBLE);
 
-        // Configuración del botón de cierre
         btnCerrarManual.setOnClickListener(v -> mostrarDialogoCerrarManual(bocadillo, fondoOscuro));
 
-        // Configuración del botón Adelante para cambiar a Mundos
         btnAdelante.setOnClickListener(v -> {
-            ((MainActivity) requireActivity()).getNavController().navigate(R.id.navigation_worlds);
+            if (mainActivity != null) {
+                mainActivity.getNavController().navigate(R.id.navigation_worlds);
+            }
+        });
+
+        btnAtras.setOnClickListener(v -> {
+            if (mainActivity != null) {
+                mainActivity.getNavController().navigate(R.id.navigation_characters);
+            }
         });
     }
 
 
-    // Método para mostrar el AlertDialog de confirmación
     private void mostrarDialogoCerrarManual(View bocadillo, View fondoOscuro) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Cerrar Manual")
@@ -150,10 +161,16 @@ public class CharactersFragment extends Fragment {
                 .setPositiveButton("Sí", (dialog, which) -> {
                     bocadillo.setVisibility(View.GONE);
                     fondoOscuro.setVisibility(View.GONE);
-                    ((MainActivity) requireActivity()).setGuiaActiva(false); // Reactivar navegación
+
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    if (mainActivity != null) {
+                        mainActivity.setGuiaCerrada(true); // Guardamos el estado en SharedPreferences
+                    }
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
+
+
 
 }
