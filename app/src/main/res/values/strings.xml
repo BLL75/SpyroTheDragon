@@ -10,4 +10,5 @@
     <string name="texto_bocadillo_mundos">Explora los distintos mundos de Spyro y descubre sus secretos.</string>
     <string name="texto_bocadillo_coleccionables">Descubre y colecciona las gemas y secretos del mundo de Spyro.</string>
     <string name="texto_bocadillo">Aquí irá el texto dinámico del bocadillo.</string>
+    <string name="texto_bocadillo_info">En el icono de info tienes más información sobre la app.</string>
 </resources>

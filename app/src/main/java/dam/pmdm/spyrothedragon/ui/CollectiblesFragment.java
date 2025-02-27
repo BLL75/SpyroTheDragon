@@ -33,6 +33,7 @@ public class CollectiblesFragment extends Fragment {
     private RecyclerView recyclerView;
     private CollectiblesAdapter adapter;
     private List<Collectible> collectiblesList;
+    private boolean mostrandoBocadilloInfo = false; // Flag para saber qué bocadillo mostrar
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -46,7 +47,12 @@ public class CollectiblesFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         loadCollectibles();
-        setupBocadillo(root);
+        // Verificamos si estamos en el bocadillo de información o en el de coleccionables
+        if (mostrandoBocadilloInfo) {
+            setupBocadilloInfo(root);
+        } else {
+            setupBocadillo(root);
+        }
         return binding.getRoot();
     }
 
@@ -108,9 +114,8 @@ public class CollectiblesFragment extends Fragment {
     }
 
     private void setupBocadillo(View root) {
-
         MainActivity mainActivity = (MainActivity) getActivity();
-        if (mainActivity != null && mainActivity.isGuiaCerrada()){
+        if (mainActivity != null && mainActivity.isGuiaCerrada()) {
             return; // Si la guía está cerrada, no mostrar el bocadillo
         }
 
@@ -121,58 +126,70 @@ public class CollectiblesFragment extends Fragment {
         ImageButton btnAdelante = bocadillo.findViewById(R.id.btnAdelante);
         ImageButton btnAtras = bocadillo.findViewById(R.id.btnAtras);
 
-        // Personalizar texto para Mundos
+        // Personalizar texto para Coleccionables
         textoBocadillo.setText(getString(R.string.texto_bocadillo_coleccionables));
 
-        // Asegurar que el bocadillo y sus elementos sean visibles
+        // Mostrar el bocadillo y los elementos
         bocadillo.setVisibility(View.VISIBLE);
         fondoOscuro.setVisibility(View.VISIBLE);
-        textoBocadillo.setVisibility(View.VISIBLE);
-        btnCerrarManual.setVisibility(View.VISIBLE);
-        btnAtras.setVisibility(View.VISIBLE);
-        btnAdelante.setVisibility(View.VISIBLE);
+        fondoOscuro.setClickable(true);
+        fondoOscuro.setFocusable(true);
 
-        // Ajustar la posición en Coleccionables para alinearlo con la pestaña derecha
+        // Posicionamiento del bocadillo
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) bocadillo.getLayoutParams();
-        params.bottomMargin = 450; // Ajustamos la altura para alinearlo con la pestaña de Coleccionables
-        params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID; // Alinear a la derecha
-        params.startToStart = ConstraintLayout.LayoutParams.UNSET; // Desvincular la alineación izquierda
+        params.bottomMargin = 450;
+        params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
         bocadillo.setLayoutParams(params);
-        bocadillo.requestLayout(); // Forzar actualización del layout
+        bocadillo.requestLayout();
 
-        // Configuración del botón de cierre
+        // Configuración del botón de cierre con confirmación
         btnCerrarManual.setOnClickListener(v -> mostrarDialogoCerrarManual(bocadillo, fondoOscuro));
 
-        // Configuración del botón Adelante para cambiar a Coleccionables
+        // Botón Adelante - Oculta este bocadillo y muestra el de información
         btnAdelante.setOnClickListener(v -> {
-            // Ocultar el bocadillo actual de Collectibles
             bocadillo.setVisibility(View.GONE);
-            textoBocadillo.setVisibility(View.GONE);
-            btnCerrarManual.setVisibility(View.GONE);
-            btnAtras.setVisibility(View.GONE);
-            btnAdelante.setVisibility(View.GONE);
-
-            // Cargar dinámicamente el bocadillo de información
-            LayoutInflater inflater = LayoutInflater.from(requireContext());
-            View bocadilloInfo = inflater.inflate(R.layout.bocadillo_info, (ViewGroup) root, false);
-
-            // Agregar el bocadillo al layout principal
-            ((ViewGroup) root).addView(bocadilloInfo);
-
-            // Configurar el botón de cierre del nuevo bocadillo
-            ImageButton btnCerrarBocadilloInfo = bocadilloInfo.findViewById(R.id.btnCerrarBocadilloInfo);
-            btnCerrarBocadilloInfo.setOnClickListener(v1 -> {
-                ((ViewGroup) root).removeView(bocadilloInfo);
-            });
-
-            // Mostrar el nuevo bocadillo
-            bocadilloInfo.setVisibility(View.VISIBLE);
+            fondoOscuro.setVisibility(View.GONE);
+            mostrandoBocadilloInfo = true; // Guardamos que ahora se muestra el bocadillo informativo
+            setupBocadilloInfo(root);
         });
 
-
-        // Configuración del botón Atrás para regresar a Personajes
+        // Botón Atrás - Vuelve a Mundos
         btnAtras.setOnClickListener(v -> {
             ((MainActivity) requireActivity()).getNavController().navigate(R.id.navigation_worlds);
+        });
+    }
+
+    private void setupBocadilloInfo(View root) {
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
+        View bocadilloInfo = inflater.inflate(R.layout.bocadillo_info, (ViewGroup) root, false);
+        ((ViewGroup) root).addView(bocadilloInfo);
+
+        TextView textoBocadilloInfo = bocadilloInfo.findViewById(R.id.textoBocadilloInfo);
+        View fondoOscuro = root.findViewById(R.id.fondoOscuro);
+        ImageButton btnCerrarBocadilloInfo = bocadilloInfo.findViewById(R.id.btnCerrarBocadilloInfo);
+        ImageButton btnAdelanteBocadilloInfo = bocadilloInfo.findViewById(R.id.btnAdelanteBocadilloInfo);
+        ImageButton btnAtrasBocadilloInfo = bocadilloInfo.findViewById(R.id.btnAtrasBocadilloInfo);
+
+        // Personalizar texto del bocadillo de información
+        textoBocadilloInfo.setText(getString(R.string.texto_bocadillo_info));
+
+        // Mostrar bocadillo y fondo
+        bocadilloInfo.setVisibility(View.VISIBLE);
+        fondoOscuro.setVisibility(View.VISIBLE);
+
+        // Botón de cierre - Llama a la confirmación
+        btnCerrarBocadilloInfo.setOnClickListener(v -> mostrarDialogoCerrarManual(bocadilloInfo, fondoOscuro));
+
+        // Botón Adelante - Avanza al resumen final de la guía
+        btnAdelanteBocadilloInfo.setOnClickListener(v -> {
+            ((MainActivity) requireActivity()).getNavController().navigate(R.id.navigation_characters);
+        });
+
+        // Botón Atrás - Vuelve al bocadillo de coleccionables
+        btnAtrasBocadilloInfo.setOnClickListener(v -> {
+            ((ViewGroup) root).removeView(bocadilloInfo);
+            mostrandoBocadilloInfo = false; // Volvemos al estado anterior
+            setupBocadillo(root);
         });
     }
 
@@ -194,4 +211,5 @@ public class CollectiblesFragment extends Fragment {
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
+
 }
