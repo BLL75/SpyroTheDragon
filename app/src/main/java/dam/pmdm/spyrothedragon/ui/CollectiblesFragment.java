@@ -145,8 +145,30 @@ public class CollectiblesFragment extends Fragment {
 
         // Configuración del botón Adelante para cambiar a Coleccionables
         btnAdelante.setOnClickListener(v -> {
-            ((MainActivity) requireActivity()).getNavController().navigate(R.id.navigation_collectibles);
+            // Ocultar el bocadillo actual de Collectibles
+            bocadillo.setVisibility(View.GONE);
+            textoBocadillo.setVisibility(View.GONE);
+            btnCerrarManual.setVisibility(View.GONE);
+            btnAtras.setVisibility(View.GONE);
+            btnAdelante.setVisibility(View.GONE);
+
+            // Cargar dinámicamente el bocadillo de información
+            LayoutInflater inflater = LayoutInflater.from(requireContext());
+            View bocadilloInfo = inflater.inflate(R.layout.bocadillo_info, (ViewGroup) root, false);
+
+            // Agregar el bocadillo al layout principal
+            ((ViewGroup) root).addView(bocadilloInfo);
+
+            // Configurar el botón de cierre del nuevo bocadillo
+            ImageButton btnCerrarBocadilloInfo = bocadilloInfo.findViewById(R.id.btnCerrarBocadilloInfo);
+            btnCerrarBocadilloInfo.setOnClickListener(v1 -> {
+                ((ViewGroup) root).removeView(bocadilloInfo);
+            });
+
+            // Mostrar el nuevo bocadillo
+            bocadilloInfo.setVisibility(View.VISIBLE);
         });
+
 
         // Configuración del botón Atrás para regresar a Personajes
         btnAtras.setOnClickListener(v -> {
