@@ -11,4 +11,23 @@
     <string name="texto_bocadillo_coleccionables">Descubre y colecciona las gemas y secretos del mundo de Spyro.</string>
     <string name="texto_bocadillo">Aquí irá el texto dinámico del bocadillo.</string>
     <string name="texto_bocadillo_info">En el icono de info tienes más información sobre la app.</string>
+
+    <!-- Bocadillos de la guía -->
+
+
+    <!-- Bocadillo de resumen final -->
+    <string name="texto_titulo_resumen">¡Has completado la guía!</string>
+    <string name="texto_resumen">Pasos completados:\n✔ Personajes\n✔ Mundos\n✔ Coleccionables\n✔ Información</string>
+    <string name="btn_finalizar_guia">Comenzar</string>
+
+    <!-- Botones -->
+    <string name="btn_atras">Atrás</string>
+    <string name="btn_adelante">Siguiente</string>
+    <string name="btn_cerrar">Cerrar</string>
+
+    <!-- Mensaje de cierre de la guía -->
+    <string name="titulo_cerrar_manual">Cerrar Manual</string>
+    <string name="mensaje_cerrar_manual">¿Seguro que quieres cerrar la guía?</string>
+    <string name="aceptar">Sí</string>
+    <string name="cancelar">Cancelar</string>
 </resources>

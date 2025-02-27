@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -180,9 +181,9 @@ public class CollectiblesFragment extends Fragment {
         // Botón de cierre - Llama a la confirmación
         btnCerrarBocadilloInfo.setOnClickListener(v -> mostrarDialogoCerrarManual(bocadilloInfo, fondoOscuro));
 
-        // Botón Adelante - Avanza al resumen final de la guía
         btnAdelanteBocadilloInfo.setOnClickListener(v -> {
-            ((MainActivity) requireActivity()).getNavController().navigate(R.id.navigation_characters);
+            ((ViewGroup) root).removeView(bocadilloInfo); // Eliminar bocadillo actual
+            setupBocadilloResumen(root);
         });
 
         // Botón Atrás - Vuelve al bocadillo de coleccionables
@@ -192,6 +193,33 @@ public class CollectiblesFragment extends Fragment {
             setupBocadillo(root);
         });
     }
+
+    private void setupBocadilloResumen(View root) {
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
+        View bocadilloResumen = inflater.inflate(R.layout.bocadillo_resumen, (ViewGroup) root, false);
+        ((ViewGroup) root).addView(bocadilloResumen);
+
+        TextView textoResumen = bocadilloResumen.findViewById(R.id.textoResumen);
+        Button btnFinalizarGuia = bocadilloResumen.findViewById(R.id.btnFinalizarGuia);
+        View fondoOscuro = root.findViewById(R.id.fondoOscuro);
+
+        // Mostrar el bocadillo de resumen
+        bocadilloResumen.setVisibility(View.VISIBLE);
+        fondoOscuro.setVisibility(View.VISIBLE);
+
+        // Configurar botón para finalizar la guía
+        btnFinalizarGuia.setOnClickListener(v -> {
+            bocadilloResumen.setVisibility(View.GONE);
+            fondoOscuro.setVisibility(View.GONE);
+
+            // Guardar en SharedPreferences que la guía ha sido completada
+            MainActivity mainActivity = (MainActivity) getActivity();
+            if (mainActivity != null) {
+                mainActivity.setGuiaCerrada(true);
+            }
+        });
+    }
+
 
 
     // Método para mostrar el AlertDialog de confirmación
