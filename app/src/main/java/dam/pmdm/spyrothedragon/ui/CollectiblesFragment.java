@@ -144,7 +144,10 @@ public class CollectiblesFragment extends Fragment {
         bocadillo.requestLayout();
 
         // Configuración del botón de cierre con confirmación
-        btnCerrarManual.setOnClickListener(v -> mostrarDialogoCerrarManual(bocadillo, fondoOscuro));
+        // Configuración del botón de cierre
+        btnCerrarManual.setOnClickListener(v -> {
+            ((MainActivity) requireActivity()).mostrarDialogoCerrarManual(bocadillo, fondoOscuro);
+        });
 
         // Botón Adelante - Oculta este bocadillo y muestra el de información
         btnAdelante.setOnClickListener(v -> {
@@ -167,7 +170,7 @@ public class CollectiblesFragment extends Fragment {
 
         TextView textoBocadilloInfo = bocadilloInfo.findViewById(R.id.textoBocadilloInfo);
         View fondoOscuro = root.findViewById(R.id.fondoOscuro);
-        ImageButton btnCerrarBocadilloInfo = bocadilloInfo.findViewById(R.id.btnCerrarBocadilloInfo);
+        ImageButton btnCerrarManual = bocadilloInfo.findViewById(R.id.btnCerrarManual);
         ImageButton btnAdelanteBocadilloInfo = bocadilloInfo.findViewById(R.id.btnAdelanteBocadilloInfo);
         ImageButton btnAtrasBocadilloInfo = bocadilloInfo.findViewById(R.id.btnAtrasBocadilloInfo);
 
@@ -179,7 +182,10 @@ public class CollectiblesFragment extends Fragment {
         fondoOscuro.setVisibility(View.VISIBLE);
 
         // Botón de cierre - Llama a la confirmación
-        btnCerrarBocadilloInfo.setOnClickListener(v -> mostrarDialogoCerrarManual(bocadilloInfo, fondoOscuro));
+        // Configuración del botón de cierre
+        btnCerrarManual.setOnClickListener(v -> {
+            ((MainActivity) requireActivity()).mostrarDialogoCerrarManual(bocadilloInfo, fondoOscuro);
+        });
 
         btnAdelanteBocadilloInfo.setOnClickListener(v -> {
             ((ViewGroup) root).removeView(bocadilloInfo); // Eliminar bocadillo actual
@@ -219,25 +225,4 @@ public class CollectiblesFragment extends Fragment {
             }
         });
     }
-
-
-
-    // Método para mostrar el AlertDialog de confirmación
-    private void mostrarDialogoCerrarManual(View bocadillo, View fondoOscuro) {
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Cerrar Manual")
-                .setMessage("¿Seguro que quieres cerrar la guía?")
-                .setPositiveButton("Sí", (dialog, which) -> {
-                    bocadillo.setVisibility(View.GONE);
-                    fondoOscuro.setVisibility(View.GONE);
-
-                    MainActivity mainActivity = (MainActivity) getActivity();
-                    if (mainActivity != null) {
-                        mainActivity.setGuiaCerrada(true); // Guardamos el estado en SharedPreferences
-                    }
-                })
-                .setNegativeButton("Cancelar", null)
-                .show();
-    }
-
 }

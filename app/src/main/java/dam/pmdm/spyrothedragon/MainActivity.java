@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -139,6 +140,21 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.accept, null)
                 .show();
     }
+
+    //  Función en MainActivity para cerrar la guía desde cualquier fragmento
+    public void mostrarDialogoCerrarManual(View bocadillo, View fondoOscuro) {
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.titulo_cerrar_manual))
+                .setMessage(getString(R.string.mensaje_cerrar_manual))
+                .setPositiveButton(getString(R.string.aceptar), (dialog, which) -> {
+                    bocadillo.setVisibility(View.GONE);
+                    fondoOscuro.setVisibility(View.GONE);
+                    setGuiaCerrada(true); // Guardamos en SharedPreferences que la guía fue cerrada
+                })
+                .setNegativeButton(getString(R.string.cancelar), null)
+                .show();
+    }
+
 
 
 

@@ -112,9 +112,8 @@ public class WorldsFragment extends Fragment {
     }
 
     private void setupBocadillo(View root) {
-
         MainActivity mainActivity = (MainActivity) getActivity();
-        if (mainActivity != null && mainActivity.isGuiaCerrada()){
+        if (mainActivity != null && mainActivity.isGuiaCerrada()) {
             return; // Si la guía está cerrada, no mostrar el bocadillo
         }
 
@@ -125,29 +124,20 @@ public class WorldsFragment extends Fragment {
         ImageButton btnAdelante = bocadillo.findViewById(R.id.btnAdelante);
         ImageButton btnAtras = bocadillo.findViewById(R.id.btnAtras);
 
-        // Personalizar texto para Mundos
+        // Personalizar texto del bocadillo
         textoBocadillo.setText(getString(R.string.texto_bocadillo_mundos));
 
-        // Asegurar que el bocadillo y sus elementos sean visibles
-        bocadillo.setVisibility(View.VISIBLE);
-        fondoOscuro.setVisibility(View.VISIBLE);
-        textoBocadillo.setVisibility(View.VISIBLE);
-        btnCerrarManual.setVisibility(View.VISIBLE);
-        btnAtras.setVisibility(View.VISIBLE);
-        btnAdelante.setVisibility(View.VISIBLE);
-
-        // Ajustar la posición en Coleccionables para alinearlo con la pestaña derecha
-        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) bocadillo.getLayoutParams();
-        params.bottomMargin = 450; // Ajustamos la altura para alinearlo con la pestaña de Coleccionables
-        params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
-        params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-        bocadillo.setLayoutParams(params);
-        bocadillo.requestLayout(); // Forzar actualización del layout
+        // Aplicar configuración visual
+        mostrarBocadillo(bocadillo, fondoOscuro, textoBocadillo, btnCerrarManual, btnAtras, btnAdelante);
+        posicionarBocadillo(bocadillo, true); // Bocadillo centrado
 
         // Configuración del botón de cierre
-        btnCerrarManual.setOnClickListener(v -> mostrarDialogoCerrarManual(bocadillo, fondoOscuro));
+        btnCerrarManual.setOnClickListener(v -> {
+            ((MainActivity) requireActivity()).mostrarDialogoCerrarManual(bocadillo, fondoOscuro);
+        });
 
-        // Configuración del botón Adelante para cambiar a Coleccionables
+
+        // Configuración del botón Adelante para ir a Coleccionables
         btnAdelante.setOnClickListener(v -> {
             ((MainActivity) requireActivity()).getNavController().navigate(R.id.navigation_collectibles);
         });
@@ -158,23 +148,31 @@ public class WorldsFragment extends Fragment {
         });
     }
 
+    //  Función para mostrar los elementos del bocadillo
+    private void mostrarBocadillo(View bocadillo, View fondoOscuro, TextView texto, ImageButton btnCerrar, ImageButton btnAtras, ImageButton btnAdelante) {
+        bocadillo.setVisibility(View.VISIBLE);
+        fondoOscuro.setVisibility(View.VISIBLE);
+        texto.setVisibility(View.VISIBLE);
+        btnCerrar.setVisibility(View.VISIBLE);
+        btnAtras.setVisibility(View.VISIBLE);
+        btnAdelante.setVisibility(View.VISIBLE);
+    }
 
-    // Método para mostrar el AlertDialog de confirmación
-    private void mostrarDialogoCerrarManual(View bocadillo, View fondoOscuro) {
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Cerrar Manual")
-                .setMessage("¿Seguro que quieres cerrar la guía?")
-                .setPositiveButton("Sí", (dialog, which) -> {
-                    bocadillo.setVisibility(View.GONE);
-                    fondoOscuro.setVisibility(View.GONE);
+    //  Función para posicionar el bocadillo en la pantalla
+    private void posicionarBocadillo(View bocadillo, boolean centrado) {
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) bocadillo.getLayoutParams();
 
-                    MainActivity mainActivity = (MainActivity) getActivity();
-                    if (mainActivity != null) {
-                        mainActivity.setGuiaCerrada(true); // Guardamos el estado en SharedPreferences
-                    }
-                })
-                .setNegativeButton("Cancelar", null)
-                .show();
+        if (centrado) {
+            params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+            params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+        } else {
+            params.startToStart = ConstraintLayout.LayoutParams.UNSET;
+            params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+        }
+
+        params.bottomMargin = 450; // Ajustamos la altura del bocadillo
+        bocadillo.setLayoutParams(params);
+        bocadillo.requestLayout();
     }
 
 }

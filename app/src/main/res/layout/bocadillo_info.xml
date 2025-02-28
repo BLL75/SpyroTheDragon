@@ -56,12 +56,12 @@
 
         <!-- Botón de cierre en el centro -->
         <ImageButton
-            android:id="@+id/btnCerrarBocadilloInfo"
+            android:id="@+id/btnCerrarManual"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_closed"
             android:background="@null"
-            android:contentDescription="Cerrar bocadillo" />
+            android:contentDescription="Cerrar manual" />
 
         <!-- Espaciador -->
         <View

@@ -133,12 +133,15 @@ public class CharactersFragment extends Fragment {
         ImageButton btnAdelante = bocadillo.findViewById(R.id.btnAdelante);
         ImageButton btnAtras = bocadillo.findViewById(R.id.btnAtras);
 
-        textoBocadillo.setText(getString(R.string.texto_bocadillo_mundos));
+        textoBocadillo.setText(getString(R.string.texto_bocadillo_personajes));
 
         bocadillo.setVisibility(View.VISIBLE);
         fondoOscuro.setVisibility(View.VISIBLE);
 
-        btnCerrarManual.setOnClickListener(v -> mostrarDialogoCerrarManual(bocadillo, fondoOscuro));
+        // Configuración del botón de cierre
+        btnCerrarManual.setOnClickListener(v -> {
+            ((MainActivity) requireActivity()).mostrarDialogoCerrarManual(bocadillo, fondoOscuro);
+        });
 
         btnAdelante.setOnClickListener(v -> {
             if (mainActivity != null) {
@@ -152,25 +155,6 @@ public class CharactersFragment extends Fragment {
             }
         });
     }
-
-
-    private void mostrarDialogoCerrarManual(View bocadillo, View fondoOscuro) {
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Cerrar Manual")
-                .setMessage("¿Seguro que quieres cerrar la guía?")
-                .setPositiveButton("Sí", (dialog, which) -> {
-                    bocadillo.setVisibility(View.GONE);
-                    fondoOscuro.setVisibility(View.GONE);
-
-                    MainActivity mainActivity = (MainActivity) getActivity();
-                    if (mainActivity != null) {
-                        mainActivity.setGuiaCerrada(true); // Guardamos el estado en SharedPreferences
-                    }
-                })
-                .setNegativeButton("Cancelar", null)
-                .show();
-    }
-
 
 
 }
