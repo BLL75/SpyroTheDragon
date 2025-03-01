@@ -131,6 +131,11 @@ public class WorldsFragment extends Fragment {
         mostrarBocadillo(bocadillo, fondoOscuro, textoBocadillo, btnCerrarManual, btnAtras, btnAdelante);
         posicionarBocadillo(bocadillo, true); // Bocadillo centrado
 
+        // Llamamos al método en MainActivity para bloquear el RecyclerView
+        if (mainActivity != null) {
+            mainActivity.bloquearInteraccionRecyclerView(recyclerView, true);
+        }
+
         // Configuración del botón de cierre
         btnCerrarManual.setOnClickListener(v -> {
             ((MainActivity) requireActivity()).mostrarDialogoCerrarManual(bocadillo, fondoOscuro);

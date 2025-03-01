@@ -136,6 +136,11 @@ public class CollectiblesFragment extends Fragment {
         fondoOscuro.setClickable(true);
         fondoOscuro.setFocusable(true);
 
+        // Llamamos al método en MainActivity para bloquear el RecyclerView
+        if (mainActivity != null) {
+            mainActivity.bloquearInteraccionRecyclerView(recyclerView, true);
+        }
+
         // Posicionamiento del bocadillo
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) bocadillo.getLayoutParams();
         params.bottomMargin = 450;
@@ -181,6 +186,11 @@ public class CollectiblesFragment extends Fragment {
         bocadilloInfo.setVisibility(View.VISIBLE);
         fondoOscuro.setVisibility(View.VISIBLE);
 
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null) {
+            mainActivity.bloquearInteraccionRecyclerView(recyclerView, true);
+        }
+
         // Botón de cierre - Llama a la confirmación
         // Configuración del botón de cierre
         btnCerrarManual.setOnClickListener(v -> {
@@ -217,9 +227,12 @@ public class CollectiblesFragment extends Fragment {
         btnFinalizarGuia.setOnClickListener(v -> {
             bocadilloResumen.setVisibility(View.GONE);
             fondoOscuro.setVisibility(View.GONE);
+            MainActivity mainActivity = (MainActivity) getActivity();
+            if (mainActivity != null) {
+                mainActivity.getNavController().navigate(R.id.navigation_characters);
+            }
 
             // Guardar en SharedPreferences que la guía ha sido completada
-            MainActivity mainActivity = (MainActivity) getActivity();
             if (mainActivity != null) {
                 mainActivity.setGuiaCerrada(true);
             }

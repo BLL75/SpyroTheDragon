@@ -138,6 +138,11 @@ public class CharactersFragment extends Fragment {
         bocadillo.setVisibility(View.VISIBLE);
         fondoOscuro.setVisibility(View.VISIBLE);
 
+        // Llamamos al método en MainActivity para bloquear el RecyclerView
+        if (mainActivity != null) {
+            mainActivity.bloquearInteraccionRecyclerView(recyclerView, true);
+        }
+
         // Configuración del botón de cierre
         btnCerrarManual.setOnClickListener(v -> {
             ((MainActivity) requireActivity()).mostrarDialogoCerrarManual(bocadillo, fondoOscuro);

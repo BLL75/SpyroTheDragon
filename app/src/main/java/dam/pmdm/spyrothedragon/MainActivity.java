@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.RecyclerView;
 
 import dam.pmdm.spyrothedragon.databinding.ActivityMainBinding;
 
@@ -154,6 +155,19 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton(getString(R.string.cancelar), null)
                 .show();
     }
+
+    public void bloquearInteraccionRecyclerView(RecyclerView recyclerView, boolean bloquear) {
+        if (recyclerView != null) {
+            if (bloquear) {
+                recyclerView.setOnTouchListener((v, event) -> true); // Bloquea interacción táctil
+                //recyclerView.setAlpha(0.5f); // Reducir opacidad para indicar que está deshabilitado
+            } else {
+                recyclerView.setOnTouchListener(null); // Permite interacción táctil nuevamente
+                //recyclerView.setAlpha(1f); // Restaura la opacidad
+            }
+        }
+    }
+
 
 
 
