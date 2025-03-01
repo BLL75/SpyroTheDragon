@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -127,6 +129,12 @@ public class WorldsFragment extends Fragment {
         // Personalizar texto del bocadillo
         textoBocadillo.setText(getString(R.string.texto_bocadillo_mundos));
 
+        // Aplicar animaciones
+        Animation fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in);
+        Animation slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
+        bocadillo.startAnimation(fadeIn);
+        bocadillo.startAnimation(slideUp);
+
         // Aplicar configuración visual
         mostrarBocadillo(bocadillo, fondoOscuro, textoBocadillo, btnCerrarManual, btnAtras, btnAdelante);
         posicionarBocadillo(bocadillo, true); // Bocadillo centrado
@@ -144,12 +152,12 @@ public class WorldsFragment extends Fragment {
 
         // Configuración del botón Adelante para ir a Coleccionables
         btnAdelante.setOnClickListener(v -> {
-            ((MainActivity) requireActivity()).getNavController().navigate(R.id.navigation_collectibles);
+            mainActivity.navegarConTransicion(R.id.navigation_collectibles);
         });
 
         // Configuración del botón Atrás para regresar a Personajes
         btnAtras.setOnClickListener(v -> {
-            ((MainActivity) requireActivity()).getNavController().navigate(R.id.navigation_characters);
+            mainActivity.navegarConTransicion(R.id.navigation_characters);
         });
     }
 

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -130,6 +132,12 @@ public class CollectiblesFragment extends Fragment {
         // Personalizar texto para Coleccionables
         textoBocadillo.setText(getString(R.string.texto_bocadillo_coleccionables));
 
+        // Aplicar animaciones
+        Animation fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in);
+        Animation slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
+        bocadillo.startAnimation(fadeIn);
+        bocadillo.startAnimation(slideUp);
+
         // Mostrar el bocadillo y los elementos
         bocadillo.setVisibility(View.VISIBLE);
         fondoOscuro.setVisibility(View.VISIBLE);
@@ -182,6 +190,12 @@ public class CollectiblesFragment extends Fragment {
         // Personalizar texto del bocadillo de información
         textoBocadilloInfo.setText(getString(R.string.texto_bocadillo_info));
 
+        // Aplicar animaciones
+        Animation fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in);
+        Animation slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
+        bocadilloInfo.startAnimation(fadeIn);
+        bocadilloInfo.startAnimation(slideUp);
+
         // Mostrar bocadillo y fondo
         bocadilloInfo.setVisibility(View.VISIBLE);
         fondoOscuro.setVisibility(View.VISIBLE);
@@ -218,6 +232,12 @@ public class CollectiblesFragment extends Fragment {
         TextView textoResumen = bocadilloResumen.findViewById(R.id.textoResumen);
         Button btnFinalizarGuia = bocadilloResumen.findViewById(R.id.btnFinalizarGuia);
         View fondoOscuro = root.findViewById(R.id.fondoOscuro);
+        // Aplicar animaciones
+        Animation fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in);
+        Animation slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
+        bocadilloResumen.startAnimation(fadeIn);
+        bocadilloResumen.startAnimation(slideUp);
+
 
         // Mostrar el bocadillo de resumen
         bocadilloResumen.setVisibility(View.VISIBLE);

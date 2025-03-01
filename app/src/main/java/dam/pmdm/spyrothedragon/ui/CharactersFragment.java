@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -135,6 +137,12 @@ public class CharactersFragment extends Fragment {
 
         textoBocadillo.setText(getString(R.string.texto_bocadillo_personajes));
 
+        // Aplicar animaciones
+        Animation fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in);
+        Animation slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
+        bocadillo.startAnimation(fadeIn);
+        bocadillo.startAnimation(slideUp);
+
         bocadillo.setVisibility(View.VISIBLE);
         fondoOscuro.setVisibility(View.VISIBLE);
 
@@ -150,7 +158,7 @@ public class CharactersFragment extends Fragment {
 
         btnAdelante.setOnClickListener(v -> {
             if (mainActivity != null) {
-                mainActivity.getNavController().navigate(R.id.navigation_worlds);
+                mainActivity.navegarConTransicion(R.id.navigation_worlds);
             }
         });
 

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -23,8 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private boolean guiaActiva = false;
     private boolean guiaCerrada = false;
-
-    NavController navController = null;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +62,11 @@ public class MainActivity extends AppCompatActivity {
                     destination.getId() == R.id.navigation_collectibles) {
                 // Para las pantallas de los tabs, no queremos que aparezca la flecha de atrás
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            }
-            else {
+            } else {
                 // Si se navega a una pantalla donde se desea mostrar la flecha de atrás, habilítala
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
         });
-
     }
 
     private boolean selectedBottomMenu(@NonNull MenuItem menuItem) {
@@ -77,11 +76,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (menuItem.getItemId() == R.id.nav_characters)
-            navController.navigate(R.id.navigation_characters);
+            navegarConTransicion(R.id.navigation_characters);
         else if (menuItem.getItemId() == R.id.nav_worlds)
-            navController.navigate(R.id.navigation_worlds);
+            navegarConTransicion(R.id.navigation_worlds);
         else
-            navController.navigate(R.id.navigation_collectibles);
+            navegarConTransicion(R.id.navigation_collectibles);
 
         return true;
     }
@@ -108,9 +107,6 @@ public class MainActivity extends AppCompatActivity {
         return guiaCerrada;
     }
 
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Infla el menú
@@ -131,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
     public NavController getNavController() {
         return navController;
     }
-
 
     private void showInfoDialog() {
         // Crear un diálogo de información
@@ -156,20 +151,19 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    // Método para bloquear el RecyclerView cuando la guía está activa
     public void bloquearInteraccionRecyclerView(RecyclerView recyclerView, boolean bloquear) {
         if (recyclerView != null) {
-            if (bloquear) {
-                recyclerView.setOnTouchListener((v, event) -> true); // Bloquea interacción táctil
-                //recyclerView.setAlpha(0.5f); // Reducir opacidad para indicar que está deshabilitado
-            } else {
-                recyclerView.setOnTouchListener(null); // Permite interacción táctil nuevamente
-                //recyclerView.setAlpha(1f); // Restaura la opacidad
-            }
+            recyclerView.setOnTouchListener(bloquear ? (v, event) -> true : null);
         }
     }
 
-
-
-
-
+    // Método para aplicar transiciones entre pantallas
+    public void navegarConTransicion(int destino) {
+        Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.navHostFragment);
+        if (navHostFragment != null) {
+            navHostFragment.getView().startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_transition));
+            navController.navigate(destino);
+        }
+    }
 }
