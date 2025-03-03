@@ -6,14 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,11 +29,9 @@ import dam.pmdm.spyrothedragon.models.Character;
 import dam.pmdm.spyrothedragon.adapters.CharactersAdapter;
 import dam.pmdm.spyrothedragon.databinding.FragmentCharactersBinding;
 
-
 public class CharactersFragment extends Fragment {
 
     private FragmentCharactersBinding binding;
-
     private RecyclerView recyclerView;
     private CharactersAdapter adapter;
     private List<Character> charactersList;
@@ -61,7 +57,6 @@ public class CharactersFragment extends Fragment {
 
         return root;
     }
-
 
     @Override
     public void onDestroyView() {
@@ -142,9 +137,11 @@ public class CharactersFragment extends Fragment {
         Animation slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
         bocadillo.startAnimation(fadeIn);
         bocadillo.startAnimation(slideUp);
+        mainActivity.reproducirSonido(mainActivity.getSoundBocadillo()); // Usar el ID correcto
 
         bocadillo.setVisibility(View.VISIBLE);
         fondoOscuro.setVisibility(View.VISIBLE);
+
 
         // Llamamos al método en MainActivity para bloquear el RecyclerView
         if (mainActivity != null) {
@@ -158,16 +155,16 @@ public class CharactersFragment extends Fragment {
 
         btnAdelante.setOnClickListener(v -> {
             if (mainActivity != null) {
+                mainActivity.reproducirSonido(mainActivity.getSoundBotonClick()); // Usar el ID correcto
                 mainActivity.navegarConTransicion(R.id.navigation_worlds);
             }
         });
 
         btnAtras.setOnClickListener(v -> {
             if (mainActivity != null) {
+                mainActivity.reproducirSonido(mainActivity.getSoundBotonClick()); // Usar el ID correcto
                 mainActivity.getNavController().navigate(R.id.navigation_characters);
             }
         });
     }
-
-
 }

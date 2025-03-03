@@ -134,6 +134,8 @@ public class WorldsFragment extends Fragment {
         Animation slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
         bocadillo.startAnimation(fadeIn);
         bocadillo.startAnimation(slideUp);
+        mainActivity.reproducirSonido(mainActivity.getSoundBocadillo()); // Usar el ID correcto
+
 
         // Aplicar configuración visual
         mostrarBocadillo(bocadillo, fondoOscuro, textoBocadillo, btnCerrarManual, btnAtras, btnAdelante);
@@ -152,11 +154,13 @@ public class WorldsFragment extends Fragment {
 
         // Configuración del botón Adelante para ir a Coleccionables
         btnAdelante.setOnClickListener(v -> {
+            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick()); // Usar el ID correcto
             mainActivity.navegarConTransicion(R.id.navigation_collectibles);
         });
 
         // Configuración del botón Atrás para regresar a Personajes
         btnAtras.setOnClickListener(v -> {
+            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick()); // Usar el ID correcto
             mainActivity.navegarConTransicion(R.id.navigation_characters);
         });
     }

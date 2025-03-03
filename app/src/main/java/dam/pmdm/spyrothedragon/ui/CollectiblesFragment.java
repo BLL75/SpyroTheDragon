@@ -137,6 +137,8 @@ public class CollectiblesFragment extends Fragment {
         Animation slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
         bocadillo.startAnimation(fadeIn);
         bocadillo.startAnimation(slideUp);
+        mainActivity.reproducirSonido(mainActivity.getSoundBocadillo()); // Usar el ID correcto
+
 
         // Mostrar el bocadillo y los elementos
         bocadillo.setVisibility(View.VISIBLE);
@@ -166,12 +168,14 @@ public class CollectiblesFragment extends Fragment {
         btnAdelante.setOnClickListener(v -> {
             bocadillo.setVisibility(View.GONE);
             fondoOscuro.setVisibility(View.GONE);
+            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick()); // Usar el ID correcto
             mostrandoBocadilloInfo = true; // Guardamos que ahora se muestra el bocadillo informativo
             setupBocadilloInfo(root);
         });
 
         // Botón Atrás - Vuelve a Mundos
         btnAtras.setOnClickListener(v -> {
+            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick()); // Usar el ID correcto
             ((MainActivity) requireActivity()).getNavController().navigate(R.id.navigation_worlds);
         });
     }
@@ -195,12 +199,14 @@ public class CollectiblesFragment extends Fragment {
         Animation slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
         bocadilloInfo.startAnimation(fadeIn);
         bocadilloInfo.startAnimation(slideUp);
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.reproducirSonido(mainActivity.getSoundBocadillo()); // Usar el ID correcto
+
 
         // Mostrar bocadillo y fondo
         bocadilloInfo.setVisibility(View.VISIBLE);
         fondoOscuro.setVisibility(View.VISIBLE);
 
-        MainActivity mainActivity = (MainActivity) getActivity();
         if (mainActivity != null) {
             mainActivity.bloquearInteraccionRecyclerView(recyclerView, true);
         }
@@ -212,12 +218,14 @@ public class CollectiblesFragment extends Fragment {
         });
 
         btnAdelanteBocadilloInfo.setOnClickListener(v -> {
+            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick()); // Usar el ID correcto
             ((ViewGroup) root).removeView(bocadilloInfo); // Eliminar bocadillo actual
             setupBocadilloResumen(root);
         });
 
         // Botón Atrás - Vuelve al bocadillo de coleccionables
         btnAtrasBocadilloInfo.setOnClickListener(v -> {
+            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick()); // Usar el ID correcto
             ((ViewGroup) root).removeView(bocadilloInfo);
             mostrandoBocadilloInfo = false; // Volvemos al estado anterior
             setupBocadillo(root);
@@ -237,6 +245,9 @@ public class CollectiblesFragment extends Fragment {
         Animation slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
         bocadilloResumen.startAnimation(fadeIn);
         bocadilloResumen.startAnimation(slideUp);
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.reproducirSonido(mainActivity.getSoundBocadillo()); // Usar el ID correcto
+
 
 
         // Mostrar el bocadillo de resumen
@@ -247,8 +258,8 @@ public class CollectiblesFragment extends Fragment {
         btnFinalizarGuia.setOnClickListener(v -> {
             bocadilloResumen.setVisibility(View.GONE);
             fondoOscuro.setVisibility(View.GONE);
-            MainActivity mainActivity = (MainActivity) getActivity();
             if (mainActivity != null) {
+                mainActivity.reproducirSonido(mainActivity.getSoundFinalGuia()); // Usar el ID correcto
                 mainActivity.getNavController().navigate(R.id.navigation_characters);
             }
 
