@@ -1,5 +1,6 @@
 package dam.pmdm.spyrothedragon.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -108,6 +109,8 @@ public class CollectiblesFragment extends Fragment {
     private void lanzarEasterEgg(int position) {
         Log.d("CollectiblesFragment", "🎬 Lanzando Easter Egg para la gema en posición: " + position);
         Toast.makeText(getContext(), "¡Easter Egg desbloqueado en la gema " + position + "!", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(getActivity(), dam.pmdm.spyrothedragon.EasterEggVideoActivity.class);
+        startActivity(intent);
     }
 
     private void loadCollectibles() {

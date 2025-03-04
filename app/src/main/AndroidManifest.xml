@@ -24,6 +24,12 @@
         </activity>
         <activity android:name="WelcomeActivity" />
 
+        <activity android:name=".EasterEggVideoActivity"
+            android:screenOrientation="landscape"
+            android:hardwareAccelerated="true"
+            android:theme="@style/Theme.SpyroTheDragon"/>
+
+
 
     </application>
 
