@@ -40,7 +40,7 @@ En esta actividad, actualizaremos una aplicación inspirada en el universo de *S
    - Muestra una animación en *Canvas* simulando una llama de fuego saliendo de la boca de *Spyro*.
 
 ## 🔧 Tecnologías utilizadas
-- **Kotlin**: Lenguaje principal de desarrollo.
+- **Java**: Lenguaje principal de desarrollo.
 - **Android Studio**: Entorno de desarrollo.
 - **SharedPreferences**: Para controlar la visualización única de la guía.
 - **Canvas API**: Para la animación del Easter Egg de Spyro.
