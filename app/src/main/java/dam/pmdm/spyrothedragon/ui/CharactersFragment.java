@@ -1,5 +1,6 @@
 package dam.pmdm.spyrothedragon.ui;
 
+import dam.pmdm.spyrothedragon.utils.BocadilloUtils;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,26 +35,18 @@ public class CharactersFragment extends Fragment {
     private FragmentCharactersBinding binding;
     private RecyclerView recyclerView;
     private CharactersAdapter adapter;
-    private List<Character> charactersList;
+    private List<Character> charactersList = new ArrayList<>();
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentCharactersBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        // Inicializamos el RecyclerView y el adaptador
-        recyclerView = binding.recyclerViewCharacters;
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        charactersList = new ArrayList<>();
-        adapter = new CharactersAdapter(charactersList);
-        recyclerView.setAdapter(adapter);
-
-        // Cargamos los personajes desde el XML
-        loadCharacters();
-
-        // Configurar la visibilidad del bocadillo
-        setupBocadillo(root);
+        inicializarRecyclerView();
+        cargarPersonajes();
+        configurarBocadillo(root);
 
         return root;
     }
@@ -64,107 +57,119 @@ public class CharactersFragment extends Fragment {
         binding = null;
     }
 
-    private void loadCharacters() {
-        try {
-            // Cargamos el archivo XML desde res/xml (NOTA: ahora se usa R.xml.characters)
-            InputStream inputStream = getResources().openRawResource(R.raw.characters);
+    /**
+     * Inicializa el RecyclerView y su adaptador.
+     */
+    private void inicializarRecyclerView() {
+        recyclerView = binding.recyclerViewCharacters;
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new CharactersAdapter(charactersList);
+        recyclerView.setAdapter(adapter);
+    }
 
-            // Crear un parser XML
+    /**
+     * Carga la lista de personajes desde el archivo XML en res/raw.
+     */
+    private void cargarPersonajes() {
+        try (InputStream inputStream = getResources().openRawResource(R.raw.characters)) {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             XmlPullParser parser = factory.newPullParser();
             parser.setInput(inputStream, null);
 
             int eventType = parser.getEventType();
-            Character currentCharacter = null;
+            Character personajeActual = null;
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                String tagName = null;
+                String etiqueta;
 
                 switch (eventType) {
                     case XmlPullParser.START_TAG:
-                        tagName = parser.getName();
-
-                        if ("character".equals(tagName)) {
-                            currentCharacter = new Character();
-                        } else if (currentCharacter != null) {
-                            if ("name".equals(tagName)) {
-                                currentCharacter.setName(parser.nextText());
-                            } else if ("description".equals(tagName)) {
-                                currentCharacter.setDescription(parser.nextText());
-                            } else if ("image".equals(tagName)) {
-                                currentCharacter.setImage(parser.nextText());
+                        etiqueta = parser.getName();
+                        if ("character".equals(etiqueta)) {
+                            personajeActual = new Character();
+                        } else if (personajeActual != null) {
+                            if ("name".equals(etiqueta)) {
+                                personajeActual.setName(parser.nextText());
+                            } else if ("description".equals(etiqueta)) {
+                                personajeActual.setDescription(parser.nextText());
+                            } else if ("image".equals(etiqueta)) {
+                                personajeActual.setImage(parser.nextText());
                             }
                         }
                         break;
 
                     case XmlPullParser.END_TAG:
-                        tagName = parser.getName();
-
-                        if ("character".equals(tagName) && currentCharacter != null) {
-                            charactersList.add(currentCharacter);
+                        etiqueta = parser.getName();
+                        if ("character".equals(etiqueta) && personajeActual != null) {
+                            charactersList.add(personajeActual);
                         }
                         break;
                 }
-
                 eventType = parser.next();
             }
 
-            adapter.notifyDataSetChanged(); // Notificamos al adaptador que los datos han cambiado
+            adapter.notifyDataSetChanged();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("CharactersFragment", "❌ Error al cargar personajes", e);
         }
     }
 
-    private void setupBocadillo(View root) {
+    /**
+     * Configura la visibilidad y animaciones del bocadillo.
+     *
+     * @param root Vista raíz del fragmento.
+     */
+    private void configurarBocadillo(View root) {
         MainActivity mainActivity = (MainActivity) getActivity();
-        if (mainActivity != null && mainActivity.isGuiaCerrada()) {
-            Log.d("cerrarGuia", "Guia cerrada, no se muestra el bocadillo");
-            return; // Si la guía está cerrada, no mostrar el bocadillo
+        if (mainActivity == null || mainActivity.isGuiaCerrada()) {
+            Log.d("cerrarGuia", "✅ Guía cerrada, no se muestra el bocadillo");
+            return;
         }
 
+        // Configurar vistas del bocadillo usando la clase utilitaria
+        BocadilloUtils.setupBocadilloViews(root, R.string.texto_bocadillo_personajes);
+
+        // Obtener referencias a las vistas configuradas en BocadilloUtils
         View bocadillo = root.findViewById(R.id.bocadilloPersonajes);
-        TextView textoBocadillo = bocadillo.findViewById(R.id.textoBocadillo);
         View fondoOscuro = root.findViewById(R.id.fondoOscuro);
-        ImageButton btnCerrarManual = bocadillo.findViewById(R.id.btnCerrarManual);
-        ImageButton btnAdelante = bocadillo.findViewById(R.id.btnAdelante);
-        ImageButton btnAtras = bocadillo.findViewById(R.id.btnAtras);
 
-        textoBocadillo.setText(getString(R.string.texto_bocadillo_personajes));
+        // Aplicar animaciones usando la clase utilitaria
+        BocadilloUtils.aplicarAnimaciones(bocadillo);
 
-        // Aplicar animaciones
-        Animation fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in);
-        Animation slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
-        bocadillo.startAnimation(fadeIn);
-        bocadillo.startAnimation(slideUp);
-        mainActivity.reproducirSonido(mainActivity.getSoundBocadillo()); // Usar el ID correcto
+        mainActivity.reproducirSonido(mainActivity.getSoundBocadillo());
 
         bocadillo.setVisibility(View.VISIBLE);
         fondoOscuro.setVisibility(View.VISIBLE);
 
-
-        // Llamamos al método en MainActivity para bloquear el RecyclerView
-        if (mainActivity != null) {
+        // Bloquear interacción con el RecyclerView si existe
+        if (recyclerView != null) {
             mainActivity.bloquearInteraccionRecyclerView(recyclerView, true);
         }
 
-        // Configuración del botón de cierre
-        btnCerrarManual.setOnClickListener(v -> {
-            ((MainActivity) requireActivity()).mostrarDialogoCerrarManual(bocadillo, fondoOscuro);
-        });
+        // Configurar botones del bocadillo
+        ImageButton btnCerrarManual = bocadillo.findViewById(R.id.btnCerrarManual);
+        ImageButton btnAdelante = bocadillo.findViewById(R.id.btnAdelante);
+        ImageButton btnAtras = bocadillo.findViewById(R.id.btnAtras);
+        configurarBotonesBocadillo(mainActivity, bocadillo, fondoOscuro, btnCerrarManual, btnAdelante, btnAtras);
+    }
+
+    /**
+     * Configura los botones del bocadillo para cerrar y navegar entre pantallas.
+     */
+    private void configurarBotonesBocadillo(MainActivity mainActivity, View bocadillo, View fondoOscuro,
+                                            ImageButton btnCerrarManual, ImageButton btnAdelante, ImageButton btnAtras) {
+
+        btnCerrarManual.setOnClickListener(v -> mainActivity.mostrarDialogoCerrarManual(bocadillo, fondoOscuro));
 
         btnAdelante.setOnClickListener(v -> {
-            if (mainActivity != null) {
-                mainActivity.reproducirSonido(mainActivity.getSoundBotonClick()); // Usar el ID correcto
-                mainActivity.navegarConTransicion(R.id.navigation_worlds);
-            }
+            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick());
+            mainActivity.navegarConTransicion(R.id.navigation_worlds);
         });
 
         btnAtras.setOnClickListener(v -> {
-            if (mainActivity != null) {
-                mainActivity.reproducirSonido(mainActivity.getSoundBotonClick()); // Usar el ID correcto
-                mainActivity.getNavController().navigate(R.id.navigation_characters);
-            }
+            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick());
+            mainActivity.getNavController().navigate(R.id.navigation_characters);
         });
     }
 }

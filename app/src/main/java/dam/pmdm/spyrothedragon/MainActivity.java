@@ -27,7 +27,6 @@ import dam.pmdm.spyrothedragon.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private boolean guiaActiva = false;
     private boolean guiaCerrada = false;
     private NavController navController;
     private SoundPool soundPool;
@@ -97,11 +96,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d("MainActivity", "Todos los sonidos se han cargado correctamente");
         }
 
-        // Registrar los IDs de los sonidos cargados
-        Log.d("MainActivity", "ID de sfx_boton_click: " + soundBotonClick);
-        Log.d("MainActivity", "ID de sfx_bocadillo_aparece: " + soundBocadillo);
-        Log.d("MainActivity", "ID de sfx_final_guia: " + soundFinalGuia);
-
         // Listener para verificar cuándo los sonidos están listos
         soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
             @Override
@@ -141,10 +135,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean selectedBottomMenu(@NonNull MenuItem menuItem) {
-        // Si la guía está activa, no permitir navegación
-        if (guiaActiva) {
-            return false; // Bloquea cambios de pestaña
-        }
 
         if (menuItem.getItemId() == R.id.nav_characters)
             navegarConTransicion(R.id.navigation_characters);
@@ -154,14 +144,6 @@ public class MainActivity extends AppCompatActivity {
             navegarConTransicion(R.id.navigation_collectibles);
 
         return true;
-    }
-
-    public void setGuiaActiva(boolean estado) {
-        this.guiaActiva = estado;
-    }
-
-    public boolean isGuiaActiva() {
-        return guiaActiva;
     }
 
     public void setGuiaCerrada(boolean estado) {
@@ -184,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.about_menu, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Gestiona el clic en el ítem de información

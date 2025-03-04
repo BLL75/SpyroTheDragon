@@ -34,7 +34,13 @@ import dam.pmdm.spyrothedragon.R;
 import dam.pmdm.spyrothedragon.adapters.CollectiblesAdapter;
 import dam.pmdm.spyrothedragon.databinding.FragmentCollectiblesBinding;
 import dam.pmdm.spyrothedragon.models.Collectible;
+import dam.pmdm.spyrothedragon.utils.BocadilloUtils;
 
+/**
+ * Fragmento que muestra la lista de coleccionables en la aplicación.
+ * Gestiona la interacción con los coleccionables, la visualización de guías
+ * y la reproducción de efectos de sonido.
+ */
 public class CollectiblesFragment extends Fragment {
 
     private FragmentCollectiblesBinding binding;
@@ -46,11 +52,20 @@ public class CollectiblesFragment extends Fragment {
     private Map<Integer, Integer> gemTapCountMap = new HashMap<>();
     private int lastTappedPosition = -1;
 
+    /**
+     * Método llamado cuando se crea la vista del fragmento.
+     *
+     * @param inflater           El LayoutInflater usado para inflar la vista.
+     * @param container          El contenedor padre al que se adjuntará la vista.
+     * @param savedInstanceState El estado previamente guardado de la actividad.
+     * @return La vista inflada del fragmento.
+     */
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         binding = FragmentCollectiblesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
         recyclerView = binding.recyclerViewCollectibles;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         collectiblesList = new ArrayList<>();
@@ -81,12 +96,18 @@ public class CollectiblesFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /**
+     * Método llamado cuando la vista del fragmento es destruida.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
 
+    /**
+     * Configura el listener para los clics en las gemas.
+     */
     private void configurarClickEnGemas() {
         adapter.setOnGemClickListener(position -> {
             if (position != lastTappedPosition) {
@@ -106,6 +127,11 @@ public class CollectiblesFragment extends Fragment {
         });
     }
 
+    /**
+     * Lanza una actividad de Easter Egg cuando se cumple la condición.
+     *
+     * @param position La posición de la gema que activó el Easter Egg.
+     */
     private void lanzarEasterEgg(int position) {
         Log.d("CollectiblesFragment", "🎬 Lanzando Easter Egg para la gema en posición: " + position);
         Toast.makeText(getContext(), "¡Easter Egg desbloqueado en la gema " + position + "!", Toast.LENGTH_LONG).show();
@@ -113,6 +139,9 @@ public class CollectiblesFragment extends Fragment {
         startActivity(intent);
     }
 
+    /**
+     * Carga los coleccionables desde un archivo XML.
+     */
     private void loadCollectibles() {
         try {
             InputStream inputStream = getResources().openRawResource(R.raw.collectibles);
@@ -164,29 +193,30 @@ public class CollectiblesFragment extends Fragment {
         }
     }
 
+    /**
+     * Configura el bocadillo de guía inicial.
+     *
+     * @param root La vista raíz del fragmento.
+     */
     private void setupBocadillo(View root) {
         MainActivity mainActivity = (MainActivity) getActivity();
         if (mainActivity != null && mainActivity.isGuiaCerrada()) {
             return; // Si la guía está cerrada, no mostrar el bocadillo
         }
 
+        // Configurar vistas del bocadillo usando la clase utilitaria
+        BocadilloUtils.setupBocadilloViews(root, R.string.texto_bocadillo_coleccionables);
+
+        // Obtener referencias a las vistas configuradas en BocadilloUtils
         View bocadillo = root.findViewById(R.id.bocadilloPersonajes);
-        TextView textoBocadillo = bocadillo.findViewById(R.id.textoBocadillo);
         View fondoOscuro = root.findViewById(R.id.fondoOscuro);
         ImageButton btnCerrarManual = bocadillo.findViewById(R.id.btnCerrarManual);
         ImageButton btnAdelante = bocadillo.findViewById(R.id.btnAdelante);
         ImageButton btnAtras = bocadillo.findViewById(R.id.btnAtras);
 
-        // Personalizar texto para Coleccionables
-        textoBocadillo.setText(getString(R.string.texto_bocadillo_coleccionables));
-
         // Aplicar animaciones
-        Animation fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in);
-        Animation slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
-        bocadillo.startAnimation(fadeIn);
-        bocadillo.startAnimation(slideUp);
-        mainActivity.reproducirSonido(mainActivity.getSoundBocadillo()); // Usar el ID correcto
-
+        BocadilloUtils.aplicarAnimaciones(bocadillo);
+        mainActivity.reproducirSonido(mainActivity.getSoundBocadillo());
 
         // Mostrar el bocadillo y los elementos
         bocadillo.setVisibility(View.VISIBLE);
@@ -194,7 +224,7 @@ public class CollectiblesFragment extends Fragment {
         fondoOscuro.setClickable(true);
         fondoOscuro.setFocusable(true);
 
-        // Llamamos al método en MainActivity para bloquear el RecyclerView
+        // Bloquear el RecyclerView
         if (mainActivity != null) {
             mainActivity.bloquearInteraccionRecyclerView(recyclerView, true);
         }
@@ -206,7 +236,6 @@ public class CollectiblesFragment extends Fragment {
         bocadillo.setLayoutParams(params);
         bocadillo.requestLayout();
 
-        // Configuración del botón de cierre con confirmación
         // Configuración del botón de cierre
         btnCerrarManual.setOnClickListener(v -> {
             ((MainActivity) requireActivity()).mostrarDialogoCerrarManual(bocadillo, fondoOscuro);
@@ -216,18 +245,23 @@ public class CollectiblesFragment extends Fragment {
         btnAdelante.setOnClickListener(v -> {
             bocadillo.setVisibility(View.GONE);
             fondoOscuro.setVisibility(View.GONE);
-            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick()); // Usar el ID correcto
+            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick());
             mostrandoBocadilloInfo = true; // Guardamos que ahora se muestra el bocadillo informativo
             setupBocadilloInfo(root);
         });
 
         // Botón Atrás - Vuelve a Mundos
         btnAtras.setOnClickListener(v -> {
-            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick()); // Usar el ID correcto
+            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick());
             ((MainActivity) requireActivity()).getNavController().navigate(R.id.navigation_worlds);
         });
     }
 
+    /**
+     * Configura el bocadillo de información.
+     *
+     * @param root La vista raíz del fragmento.
+     */
     private void setupBocadilloInfo(View root) {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         View bocadilloInfo = inflater.inflate(R.layout.bocadillo_info, (ViewGroup) root, false);
@@ -243,13 +277,11 @@ public class CollectiblesFragment extends Fragment {
         textoBocadilloInfo.setText(getString(R.string.texto_bocadillo_info));
 
         // Aplicar animaciones
-        Animation fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in);
-        Animation slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
-        bocadilloInfo.startAnimation(fadeIn);
-        bocadilloInfo.startAnimation(slideUp);
-        MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.reproducirSonido(mainActivity.getSoundBocadillo()); // Usar el ID correcto
+        // Aplicar animaciones usando la clase utilitaria
+        BocadilloUtils.aplicarAnimaciones(bocadilloInfo);
 
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.reproducirSonido(mainActivity.getSoundBocadillo());
 
         // Mostrar bocadillo y fondo
         bocadilloInfo.setVisibility(View.VISIBLE);
@@ -259,27 +291,31 @@ public class CollectiblesFragment extends Fragment {
             mainActivity.bloquearInteraccionRecyclerView(recyclerView, true);
         }
 
-        // Botón de cierre - Llama a la confirmación
         // Configuración del botón de cierre
         btnCerrarManual.setOnClickListener(v -> {
             ((MainActivity) requireActivity()).mostrarDialogoCerrarManual(bocadilloInfo, fondoOscuro);
         });
 
         btnAdelanteBocadilloInfo.setOnClickListener(v -> {
-            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick()); // Usar el ID correcto
+            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick());
             ((ViewGroup) root).removeView(bocadilloInfo); // Eliminar bocadillo actual
             setupBocadilloResumen(root);
         });
 
         // Botón Atrás - Vuelve al bocadillo de coleccionables
         btnAtrasBocadilloInfo.setOnClickListener(v -> {
-            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick()); // Usar el ID correcto
+            mainActivity.reproducirSonido(mainActivity.getSoundBotonClick());
             ((ViewGroup) root).removeView(bocadilloInfo);
             mostrandoBocadilloInfo = false; // Volvemos al estado anterior
             setupBocadillo(root);
         });
     }
 
+    /**
+     * Configura el bocadillo de resumen de la guía.
+     *
+     * @param root La vista raíz del fragmento.
+     */
     private void setupBocadilloResumen(View root) {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         View bocadilloResumen = inflater.inflate(R.layout.bocadillo_resumen, (ViewGroup) root, false);
@@ -288,15 +324,12 @@ public class CollectiblesFragment extends Fragment {
         TextView textoResumen = bocadilloResumen.findViewById(R.id.textoResumen);
         Button btnFinalizarGuia = bocadilloResumen.findViewById(R.id.btnFinalizarGuia);
         View fondoOscuro = root.findViewById(R.id.fondoOscuro);
+
         // Aplicar animaciones
-        Animation fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in);
-        Animation slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
-        bocadilloResumen.startAnimation(fadeIn);
-        bocadilloResumen.startAnimation(slideUp);
+        // Aplicar animaciones usando la clase utilitaria
+        BocadilloUtils.aplicarAnimaciones(bocadilloResumen);
         MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.reproducirSonido(mainActivity.getSoundBocadillo()); // Usar el ID correcto
-
-
+        mainActivity.reproducirSonido(mainActivity.getSoundBocadillo());
 
         // Mostrar el bocadillo de resumen
         bocadilloResumen.setVisibility(View.VISIBLE);
@@ -307,7 +340,7 @@ public class CollectiblesFragment extends Fragment {
             bocadilloResumen.setVisibility(View.GONE);
             fondoOscuro.setVisibility(View.GONE);
             if (mainActivity != null) {
-                mainActivity.reproducirSonido(mainActivity.getSoundFinalGuia()); // Usar el ID correcto
+                mainActivity.reproducirSonido(mainActivity.getSoundFinalGuia());
                 mainActivity.getNavController().navigate(R.id.navigation_characters);
             }
 
