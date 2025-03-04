@@ -67,8 +67,6 @@ Uno de los aspectos más interesantes fue la incorporación de *Easter Eggs*, lo
 
 En general, este proyecto representó una excelente oportunidad para aplicar conocimientos en diseño de interfaces, animaciones, manejo de eventos y almacenamiento de datos. Se logró un producto final atractivo, funcional y alineado con la temática del universo de *Spyro*, mejorando significativamente la usabilidad y el engagement del usuario.
 
-## 📸 Capturas de pantalla (Opcional)
-_Aquí puedes incluir imágenes de la aplicación funcionando_
 
 ## 📄 Licencia
 Este proyecto está bajo la licencia MIT. Puedes ver más detalles en el archivo LICENSE del repositorio.
