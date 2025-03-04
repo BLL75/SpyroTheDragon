@@ -61,7 +61,11 @@ Asegúrate de tener *Android Studio* instalado. Luego, abre el proyecto y sincro
 3. Explora la app y descubre los *Easter Eggs* ocultos.
 
 ## 🎯 Conclusiones del desarrollador
-Durante el desarrollo, se trabajó en la implementación de elementos interactivos para mejorar la experiencia del usuario. Se integraron animaciones, efectos de sonido y mecánicas ocultas (*Easter Eggs*), lo que permitió mejorar la inmersión y jugabilidad en la app.
+El desarrollo de esta aplicación presentó varios desafíos y oportunidades de aprendizaje. Se implementaron elementos interactivos con el objetivo de enriquecer la experiencia del usuario y hacer que la navegación por la app fuera más atractiva e intuitiva. La integración de animaciones permitió que los elementos de la interfaz cobraran vida, facilitando la comprensión de las distintas secciones de la aplicación. Además, los efectos de sonido añadieron una capa de inmersión, reforzando la ambientación inspirada en *Spyro the Dragon*.
+
+Uno de los aspectos más interesantes fue la incorporación de *Easter Eggs*, los cuales no solo ofrecen un elemento de sorpresa y diversión, sino que también incentivan la exploración dentro de la app. El uso de *SharedPreferences* permitió que la guía de inicio interactiva solo se mostrara una vez, garantizando una experiencia fluida sin interrupciones innecesarias.
+
+En general, este proyecto representó una excelente oportunidad para aplicar conocimientos en diseño de interfaces, animaciones, manejo de eventos y almacenamiento de datos. Se logró un producto final atractivo, funcional y alineado con la temática del universo de *Spyro*, mejorando significativamente la usabilidad y el engagement del usuario.
 
 ## 📸 Capturas de pantalla (Opcional)
 _Aquí puedes incluir imágenes de la aplicación funcionando_
