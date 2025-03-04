@@ -1,6 +1,7 @@
 package dam.pmdm.spyrothedragon.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -22,7 +24,9 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dam.pmdm.spyrothedragon.MainActivity;
 import dam.pmdm.spyrothedragon.R;
@@ -37,6 +41,9 @@ public class CollectiblesFragment extends Fragment {
     private CollectiblesAdapter adapter;
     private List<Collectible> collectiblesList;
     private boolean mostrandoBocadilloInfo = false; // Flag para saber qué bocadillo mostrar
+    private boolean guiaCerrada = false;
+    private Map<Integer, Integer> gemTapCountMap = new HashMap<>();
+    private int lastTappedPosition = -1;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -49,13 +56,27 @@ public class CollectiblesFragment extends Fragment {
         adapter = new CollectiblesAdapter(collectiblesList);
         recyclerView.setAdapter(adapter);
 
-        loadCollectibles();
-        // Verificamos si estamos en el bocadillo de información o en el de coleccionables
-        if (mostrandoBocadilloInfo) {
-            setupBocadilloInfo(root);
-        } else {
-            setupBocadillo(root);
+        // Verificar si la guía ya ha sido cerrada
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null) {
+            guiaCerrada = mainActivity.isGuiaCerrada();
         }
+
+        if (guiaCerrada) {
+            configurarClickEnGemas();
+        }
+
+        loadCollectibles();
+
+        // Verificamos si la guía debe mostrarse
+        if (!guiaCerrada) {
+            if (mostrandoBocadilloInfo) {
+                setupBocadilloInfo(root);
+            } else {
+                setupBocadillo(root);
+            }
+        }
+
         return binding.getRoot();
     }
 
@@ -63,6 +84,30 @@ public class CollectiblesFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void configurarClickEnGemas() {
+        adapter.setOnGemClickListener(position -> {
+            if (position != lastTappedPosition) {
+                gemTapCountMap.put(lastTappedPosition, 0);
+                lastTappedPosition = position;
+            }
+            int currentCount = gemTapCountMap.getOrDefault(position, 0) + 1;
+            gemTapCountMap.put(position, currentCount);
+
+            Log.d("CollectiblesFragment", "✅ Click en gema: " + position + " | Toques: " + currentCount);
+            Toast.makeText(getContext(), "Gema " + position + " pulsada " + currentCount + " veces", Toast.LENGTH_SHORT).show();
+
+            if (currentCount >= 4) {
+                gemTapCountMap.put(position, 0);
+                lanzarEasterEgg(position);
+            }
+        });
+    }
+
+    private void lanzarEasterEgg(int position) {
+        Log.d("CollectiblesFragment", "🎬 Lanzando Easter Egg para la gema en posición: " + position);
+        Toast.makeText(getContext(), "¡Easter Egg desbloqueado en la gema " + position + "!", Toast.LENGTH_LONG).show();
     }
 
     private void loadCollectibles() {

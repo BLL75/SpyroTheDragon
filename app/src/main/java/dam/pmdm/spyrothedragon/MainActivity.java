@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.RecyclerView;
@@ -216,10 +217,15 @@ public class MainActivity extends AppCompatActivity {
                     bocadillo.setVisibility(View.GONE);
                     fondoOscuro.setVisibility(View.GONE);
                     setGuiaCerrada(true); // Guardamos en SharedPreferences que la guía fue cerrada
+
+                    // Navegar al fragment de Characters
+                    NavController navController = Navigation.findNavController(this, R.id.navHostFragment);
+                    navController.navigate(R.id.navigation_characters);
                 })
                 .setNegativeButton(getString(R.string.cancelar), null)
                 .show();
     }
+
 
     // Método para bloquear el RecyclerView cuando la guía está activa
     public void bloquearInteraccionRecyclerView(RecyclerView recyclerView, boolean bloquear) {
